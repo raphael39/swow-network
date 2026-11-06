@@ -1,0 +1,80 @@
+# pymovements dataset definition for GECO (Ghent Eye-Tracking Corpus).
+# GECO is not (yet) part of pymovements' DatasetLibrary, so we define it here.
+#
+# Cop, U., Dirix, N., Drieghe, D., & Duyck, W. (2017). Presenting GECO: An eyetracking
+# corpus of monolingual and bilingual sentence reading. Behavior Research Methods,
+# 49(2), 602-615. https://doi.org/10.3758/s13428-016-0734-0
+#
+# Source: https://expsy.ugent.be/downloads/geco/
+# md5 checksums were computed on download (2026-11-02).
+
+name: "GECO"
+
+long_name: "Ghent Eye-Tracking Corpus"
+
+description: |
+  Eye movements of participants reading the full novel "The Mysterious Affair at Styles"
+  (Agatha Christie). English monolinguals read it in English; Dutch-English bilinguals
+  read half in Dutch (L1) and half in English (L2). Word-level reading measures
+  (first fixation, gaze duration, go-past, total reading time, skipping, ...).
+
+resources:
+  # Word-level reading measures, one file per reader group / language rank.
+  # All columns are read as strings ("." marks missing values) and cast in
+  # semfields.eyetracking.geco, because type inference over 600k rows of
+  # Excel is slow and unreliable.
+  - content: precomputed_reading_measures
+    source:
+      url: "https://expsy.ugent.be/downloads/geco/files/MonolingualReadingData.xlsx"
+      filename: "MonolingualReadingData.xlsx"
+      md5: "e5912fd4e9413c90109e3e5122c5cb21"
+    filename_pattern: "MonolingualReadingData.xlsx"
+    load_kwargs:
+      read_excel_kwargs:
+        sheet_name: "DATA"
+        infer_schema_length: 0
+
+  - content: precomputed_reading_measures
+    source:
+      url: "https://expsy.ugent.be/downloads/geco/files/L1ReadingData.xlsx"
+      filename: "L1ReadingData.xlsx"
+      md5: "fde37a15364c3cae22f5052454280390"
+    filename_pattern: "L1ReadingData.xlsx"
+    load_kwargs:
+      read_excel_kwargs:
+        sheet_name: "DATA"
+        infer_schema_length: 0
+
+  - content: precomputed_reading_measures
+    source:
+      url: "https://expsy.ugent.be/downloads/geco/files/L2ReadingData.xlsx"
+      filename: "L2ReadingData.xlsx"
+      md5: "7f74a26b19d60ac2002c610aa7820da9"
+    filename_pattern: "L2ReadingData.xlsx"
+    load_kwargs:
+      read_excel_kwargs:
+        sheet_name: "DATA"
+        infer_schema_length: 0
+
+  # Supplementary files. pymovements downloads and checksums them, but has no
+  # loader for them, so they stay in `downloads/` and are read by our own code.
+  - content: supplementary
+    source:
+      url: "https://expsy.ugent.be/downloads/geco/files/EnglishMaterial.xlsx"
+      filename: "EnglishMaterial.xlsx"
+      md5: "564082ae22ca8f8924f784b4e10f302c"
+    filename_pattern: "EnglishMaterial.xlsx"
+
+  - content: supplementary
+    source:
+      url: "https://expsy.ugent.be/downloads/geco/files/DutchMaterials.xlsx"
+      filename: "DutchMaterials.xlsx"
+      md5: "2f8e8254acf861b3b528104c7d973337"
+    filename_pattern: "DutchMaterials.xlsx"
+
+  - content: supplementary
+    source:
+      url: "https://expsy.ugent.be/downloads/geco/files/SubjectInformation.xlsx"
+      filename: "SubjectInformation.xlsx"
+      md5: "51ade7008242f149c5cfc4b7e65b828d"
+    filename_pattern: "SubjectInformation.xlsx"
