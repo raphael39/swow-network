@@ -1,23 +1,18 @@
 """Cross-reference GECO words with the SWOW cue vocabulary (week-1 coverage check).
 
-Run from anywhere (after 01_load_geco.py):
-    python scripts/02_geco_swow_coverage.py
+Run from the repository root (after 01_load_geco.py):
+    uv run scripts/02_geco_swow_coverage.py
 Outputs:
     data/processed/geco_words_swow_{en,nl}.parquet   one row per word token, with match
     results/tables/geco_swow_coverage.csv            coverage overall and per POS
     results/tables/geco_swow_unmatched_{en,nl}.csv   unmatched content words by frequency
 """
-import sys
-from pathlib import Path
+import polars as pl
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-
-import polars as pl  # noqa: E402
-
-from semfields.eyetracking import geco  # noqa: E402
-from semfields.network import swow  # noqa: E402
-from semfields.paths import PROCESSED_DIR, TABLES_DIR  # noqa: E402
-from semfields.text import geco_words, swow_match  # noqa: E402
+from semfields.eyetracking import geco
+from semfields.network import swow
+from semfields.paths import PROCESSED_DIR, TABLES_DIR
+from semfields.text import geco_words, swow_match
 
 LANG_CODES = {"English": "en", "Dutch": "nl"}
 

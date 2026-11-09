@@ -43,6 +43,10 @@ Install the environment with [uv](https://docs.astral.sh/uv/) from the repositor
 uv sync
 ```
 
+This also installs the project's own code (`src/semfields`) into `.venv` in editable mode, so
+`import semfields` works in scripts and notebooks without touching `sys.path`, and edits under
+`src/` take effect immediately. In VS Code / Jupyter, pick `.venv` as the kernel.
+
 ## Getting the data
 
 `data/` is not in git, so everyone downloads the files once. About 1.7 GB is needed in total.
@@ -78,10 +82,10 @@ To cite:
 
 ## Running
 
-From the repository root:
+From the repository root (`uv run` uses `.venv` on every OS, no activation needed):
 
 ```bash
-.venv/Scripts/python.exe scripts/01_load_geco.py
+uv run scripts/01_load_geco.py
 ```
 
 This downloads GECO (~560 MB; files that are already there are checksum-verified and
@@ -91,7 +95,7 @@ reused), parses it with pymovements and writes
 Then cross-reference GECO's words with the SWOW cues (needs spaCy models, installed via `uv sync`):
 
 ```bash
-.venv/Scripts/python.exe scripts/02_geco_swow_coverage.py
+uv run scripts/02_geco_swow_coverage.py
 ```
 
 This writes `data/processed/geco_words_swow_{en,nl}.parquet` (one row per word token:
@@ -100,10 +104,9 @@ coverage tables to `results/tables/`. Content words = spaCy NOUN/VERB/ADJ/ADV; p
 nouns are flagged separately. SWOW-NL comes as raw responses (`data/swow/SWOW-NL/associationData.csv`);
 its R1/R123 strength tables are computed on first use and cached in `data/interim/swow/`.
 
-In a notebook in `notebooks/`:
+In a notebook (with the `.venv` kernel):
 
 ```python
-import sys; sys.path.insert(0, "../src")
 from semfields.eyetracking import geco
 rm = geco.load_reading_measures()      # cached parquet after the first run
 ```

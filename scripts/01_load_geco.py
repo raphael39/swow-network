@@ -1,17 +1,12 @@
 """Stage 0: download GECO and build the cleaned word-level reading-measures table.
 
-Run from anywhere:
-    python scripts/01_load_geco.py
+Run from the repository root:
+    uv run scripts/01_load_geco.py
 Output: data/interim/geco/reading_measures_materials.parquet
 """
-import sys
-from pathlib import Path
+import polars as pl
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-
-import polars as pl  # noqa: E402
-
-from semfields.eyetracking import geco  # noqa: E402
+from semfields.eyetracking import geco
 
 
 def main() -> None:
