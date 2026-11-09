@@ -104,6 +104,25 @@ coverage tables to `results/tables/`. Content words = spaCy NOUN/VERB/ADJ/ADV; p
 nouns are flagged separately. SWOW-NL comes as raw responses (`data/swow/SWOW-NL/associationData.csv`);
 its R1/R123 strength tables are computed on first use and cached in `data/interim/swow/`.
 
+Describe the SWOW networks (stage 1; needs the SWOW files):
+
+```bash
+uv run scripts/03_network_description.py
+```
+
+This builds the directed cue graph (cues only, the graph stage 2 partitions) and the full graph
+(cues and responses) per language and writes `results/tables/network_summary.csv` (size,
+components, reciprocity, assortativity, clustering, path length), `results/tables/network_small_world.csv`
+(C and L against configuration-model nulls), `data/processed/network_degrees_{en,nl}.parquet` and
+degree plots in `results/figures/`. Clustering and path lengths are estimated on a fixed random node
+sample. On a synthetic graph of SWOW-EN size the script takes about 4 minutes.
+
+Tests (no data needed):
+
+```bash
+uv run --with pytest pytest tests
+```
+
 In a notebook (with the `.venv` kernel):
 
 ```python

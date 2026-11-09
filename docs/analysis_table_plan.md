@@ -5,7 +5,7 @@ SWOW (as cue **or** response), each participant's first fixation duration on it,
 surprisal and frequency. No aggregation over word types: every row is one occurrence in its
 sentence, so word order (needed for the stay/switch variable) is preserved.
 
-Output: `data/processed/analysis_{en,nl}.parquet`, built by `scripts/03_build_analysis_table.py`.
+Output: `data/processed/analysis_{en,nl}.parquet`, built by `scripts/04_build_analysis_table.py`.
 
 ## Columns
 

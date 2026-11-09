@@ -1,0 +1,6 @@
+# data is downloaded per person (README); SWOW must not be redistributed (CC BY-NC-ND)
+data/
+.venv/
+__pycache__/
+.pytest_cache/
+.ipynb_checkpoints/
