@@ -23,7 +23,7 @@ swow-network/
 │   ├── paths.py               all paths in one place
 │   ├── eyetracking/geco.py    stage 0: GECO loading
 │   ├── network/               stage 1: build + describe SWOW graphs, null models
-│   ├── communities/           stage 2: Louvain, stability, WordNet check
+│   ├── communities/           stage 2: Louvain
 │   ├── text/                  stage 3: tokenise/lemmatise GECO, map to communities, switch variable
 │   └── analysis/              stage 4: mixed models, random-partition baseline
 ├── scripts/                   numbered, runnable pipeline steps (01_load_geco.py, ...)
