@@ -63,7 +63,8 @@ Keep the folder and file names below, because the code looks for them.
 `data/swow/SWOW-NL/associationData.csv` and `users.csv`. The strength tables are computed from them
 on first use.
 
-**SUBTLEX.** No loader exists yet, so the exact file names are still open.
+**SUBTLEX-UK.** This file is needed: `data/frequency/SUBTLEX-UK.txt` (tab-separated, with the
+`Spelling`, `FreqCount` and `LogFreq(Zipf)` columns).
 
 Check the licence terms before sharing data. SWOW is released under CC BY-NC-ND 3.0, and its
 authors ask you to report the dataset name, version and release date you used.
@@ -100,6 +101,26 @@ coverage tables to `results/tables/`. Content words = spaCy NOUN/VERB/ADJ/ADV; p
 nouns are flagged separately. SWOW-NL comes as raw responses (`data/swow/SWOW-NL/associationData.csv`);
 its R1/R123 strength tables are computed on first use and cached in `data/interim/swow/`.
 
+Then compute surprisal and frequency for every word token of the English text (needs
+`data/frequency/SUBTLEX-UK.txt`; downloads GPT-2 small on first use):
+
+```bash
+.venv/Scripts/python.exe scripts/03_token_predictors.py
+```
+
+This writes `data/interim/geco/tokens_en.parquet`: one row per word token in reading order, with
+`sentence_id`, `position_in_sentence`, `surprisal_context`, `surprisal_sentence`, `zipf_frequency`
+and `freq_missing`. The decisions behind these columns are in `docs/analysis_table_plan.md`.
+
+Finally join the tokens with the readers:
+
+```bash
+.venv/Scripts/python.exe scripts/04_build_analysis_table.py
+```
+
+This writes `data/processed/analysis_en.parquet`: one row per participant x content-word token
+that is a SWOW node, with `ffd`, `gd`, `trt`, `skip`, surprisal and frequency.
+
 In a notebook in `notebooks/`:
 
 ```python
@@ -120,6 +141,6 @@ One row per participant × word, with all original GECO columns plus:
 | `ffd`, `gd`, `gopast` | first fixation, gaze duration, go-past time; null if the word was skipped in first pass |
 | `trt` | total reading time (null if never fixated) |
 | `skip`, `n_fix`, `n_runs`, `regression_out`, `reread` | skipping and regression indicators |
-| `SENTENCE_ID`, `CHRON_ID`, `PART_OF_SPEECH`, `is_content_word`, `word_length` | from the GECO materials files |
+| `SENTENCE_ID`, `CHRON_ID`, `PART_OF_SPEECH`, `is_content_word`, `word_length` | from the GECO materials files. Do not use `SENTENCE_ID` for sentence boundaries (shifted in places); use `sentence_id` from `tokens_en.parquet` |
 
 Cite: Cop, Dirix, Drieghe & Duyck (2017), *Behavior Research Methods* 49, 602–615.

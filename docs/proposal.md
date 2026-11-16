@@ -23,18 +23,17 @@ syntax, and network science gives us a principled way to find them.
 
 ## Data
 
-Both core datasets are public and exist in English and Dutch, which gives us a two-language
-comparison without extra data collection.
+Both core datasets are public and exist in English and Dutch, which would alllow us a two-language
+comparison without extra data collection, if we want to.
 
 | Dataset | What it is | Languages | Role in the project |
 |---|---|---|---|
 | Small World of Words (SWOW) | Free-association norms: people see a cue word and name the first three words that come to mind; roughly 12,000 cues per language | English | Directed, weighted association network (cue to response, weight = response frequency) |
 | GECO (Ghent Eye-Tracking Corpus) | Eye movements of people reading a full novel; Dutch–English bilinguals read it in both languages, plus an English monolingual group | English | Word-level reading measures: first fixation, gaze duration, total reading time, regressions |
-| Pretrained language models (e.g. GPT-2 and a Dutch equivalent) | Used only to compute word surprisal | English | Control variable |
+| Pretrained language models (e.g. GPT-2) | Used only to compute word surprisal | English | Control variable |
 | Word frequency norms (e.g. SUBTLEX) | Corpus word frequencies | English | Control variable |
 
-To check in week 1: exact access and licence terms for SWOW and GECO, and what share of GECO's
-content words appear as SWOW cues.
+
 
 ## Method
 
