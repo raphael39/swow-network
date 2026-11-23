@@ -27,7 +27,8 @@ SPACY_MODELS = {
 # Content words are defined by spaCy's universal POS. We don't use GECO's CONTENT_WORD
 # flag: it counts auxiliaries ("was", "had") and particles ("up") as content words, and
 # tags names inconsistently. Proper nouns get their own flag (`is_proper_noun`).
-CONTENT_POS = {"NOUN", "VERB", "ADJ", "ADV"}
+# Adverbs are left out: words like "still" and "even" are tagged ADV and are not topical.
+CONTENT_POS = {"NOUN", "VERB", "ADJ"}
 
 # Words spaCy tags as ADV/ADJ/... that are function words for our purpose.
 # Dutch pronominal adverbs: "er" and er/daar/hier/waar + preposition ("ervan", "waarop").

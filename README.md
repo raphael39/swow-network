@@ -57,7 +57,9 @@ Keep the folder and file names below, because the code looks for them.
 | SUBTLEX-NL | manual: [OSF](https://osf.io/3d8cx/wiki) (the version with Zipf values and POS) | `data/frequency/` |
 
 **SWOW-EN.** Unpack the archive so that this file exists:
-`data/swow/SWOW-EN18/strength.SWOW-EN.R123.20180827.csv`. The code uses the `strength.*` files.
+`data/swow/SWOW-EN18/strength.SWOW-EN.R1.20180827.csv`. The code uses the `strength.*` files:
+R1 (first responses only) by default, R123 (all three responses) if `SWOW_RESPONSES` in
+`src/semfields/config.py` is changed. Keep both files so that switching works.
 
 **SWOW-NL.** The release is raw responses. These files are needed:
 `data/swow/SWOW-NL/associationData.csv` and `users.csv`. The strength tables are computed from them
@@ -97,9 +99,13 @@ Then cross-reference GECO's words with the SWOW cues (needs spaCy models, instal
 
 This writes `data/processed/geco_words_swow_{en,nl}.parquet` (one row per word token:
 cleaned form, spaCy lemma/POS, `is_content_word`, matched `swow_cue`, `match_type`) and
-coverage tables to `results/tables/`. Content words = spaCy NOUN/VERB/ADJ/ADV; proper
+coverage tables to `results/tables/`. Content words = spaCy NOUN/VERB/ADJ (no adverbs); proper
 nouns are flagged separately. SWOW-NL comes as raw responses (`data/swow/SWOW-NL/associationData.csv`);
 its R1/R123 strength tables are computed on first use and cached in `data/interim/swow/`.
+
+Which SWOW responses are used (R1 or R123) is set in one place, `src/semfields/config.py`.
+After changing it, rerun the scripts from `02_geco_swow_coverage.py` on; their outputs are
+overwritten, not kept per setting.
 
 Then compute surprisal and frequency for every word token of the English text (needs
 `data/frequency/SUBTLEX-UK.txt`; downloads GPT-2 small on first use):

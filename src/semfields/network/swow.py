@@ -13,6 +13,7 @@ from pathlib import Path
 
 import polars as pl
 
+from semfields import config
 from semfields.paths import INTERIM_DIR, SWOW_EN_DIR, SWOW_NL_DIR
 
 SWOW_DIRS = {"English": SWOW_EN_DIR, "Dutch": SWOW_NL_DIR}
@@ -23,8 +24,12 @@ NL_MISSING = {"x", ""}
 RESPONSE_SLOTS = {"R1": ["asso1"], "R123": ["asso1", "asso2", "asso3"]}
 
 
-def strength_file(language: str, responses: str = "R123") -> Path:
-    """Path of the strength file for `language` ("English"/"Dutch") and `responses` ("R1"/"R123")."""
+def strength_file(language: str, responses: str | None = None) -> Path:
+    """Path of the strength file for `language` ("English"/"Dutch") and `responses` ("R1"/"R123").
+
+    `responses` defaults to `config.SWOW_RESPONSES`.
+    """
+    responses = responses or config.SWOW_RESPONSES
     if language == "Dutch":
         path = DERIVED_DIR / f"strength.SWOW-NL.{responses}.csv"
         if not path.exists():
@@ -67,8 +72,12 @@ def build_strength_from_raw(raw: Path, responses: str, out: Path) -> pl.DataFram
     return strength
 
 
-def load_strength(language: str = "English", responses: str = "R123") -> pl.DataFrame:
-    """Cue -> response association strengths, columns: cue, response, count, n, strength."""
+def load_strength(language: str = "English", responses: str | None = None) -> pl.DataFrame:
+    """Cue -> response association strengths, columns: cue, response, count, n, strength.
+
+    `responses` ("R1" or "R123") defaults to `config.SWOW_RESPONSES`.
+    """
+    responses = responses or config.SWOW_RESPONSES
     df = pl.read_csv(
         strength_file(language, responses),
         separator="\t",

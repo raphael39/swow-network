@@ -14,6 +14,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 import polars as pl  # noqa: E402
 
+from semfields import config  # noqa: E402
 from semfields.eyetracking import geco  # noqa: E402
 from semfields.network import swow  # noqa: E402
 from semfields.paths import PROCESSED_DIR, TABLES_DIR  # noqa: E402
@@ -23,6 +24,7 @@ LANG_CODES = {"English": "en", "Dutch": "nl"}
 
 
 def main() -> None:
+    print(f"SWOW responses: {config.SWOW_RESPONSES} (set in src/semfields/config.py)")
     rm = geco.load_reading_measures()
     PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
     TABLES_DIR.mkdir(parents=True, exist_ok=True)

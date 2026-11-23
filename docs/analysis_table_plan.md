@@ -91,13 +91,12 @@ Dutch: SWOW-NL is available (raw responses; strengths computed in `semfields.net
 Dutch lemmas: candidates from nl_core_news_sm + nl_core_news_lg + weak-past-tense rules
 ("mompelde" -> "mompelen"), accepted only if they are SWOW cues. Pronominal adverbs ("er",
 "ervan", "waarop"), clitics ("'t") and English contractions ("isn't") are not content words.
-Open question for the group: keep adverbs as content words? Modal particles such as Dutch
-"nog", "nou", "immers" and English "still", "even" are tagged ADV and are not very topical.
+Adverbs are no longer content words (decided 2026-11-16, see the regression decisions).
 
 ## Network analysis tooling
 
 Use `networkx` for stages 1 and 2, following the course workbook and the self-study notebook.
-Timings on SWOW-EN (R123): 133,763 nodes and 1.39M edges in total; 12,217 nodes and 1.07M edges
+Timings were measured on SWOW-EN R123, before R1 was chosen; the R1 graph is smaller. R123: 133,763 nodes and 1.39M edges in total; 12,217 nodes and 1.07M edges
 between cues only.
 
 - Fine as they are: degree and strength distributions, connected components, assortativity (5 s),
@@ -166,7 +165,39 @@ between cues only.
 - **Hypothesis 2:** fit the baseline model without `switch` once, then compare the switch-minus-stay
   difference in its residuals between the real partition and random partitions with the same
   community sizes (permutation test).
+- **Content words:** nouns, verbs and adjectives. Adverbs are not content words. Proper nouns stay
+  out and are passed over when looking for the previous content word.
+- **Repetitions:** kept, with a flag for pairs where the previous content word is the same word.
+- **No spillover controls:** the previous word's frequency, length and surprisal are not in the model.
+- **Minimum number of readers:** a token enters the model if at least 3 readers fixated it.
+- **Interest areas with several words** ("again...after", 'pouf!" ...he') are excluded.
+- **SWOW responses: R1** (first responses only, decided 2026-11-17) for everything: the network,
+  the communities, the direct association strength, and matching GECO words to SWOW. Set in
+  `src/semfields/config.py` (`SWOW_RESPONSES`); switching to R123 means changing that line and
+  rerunning the scripts from 02 on.
+- **Direct association strength:** the direction is still open.
+- **Missing rows:** about 2% of the expected monolingual rows are absent from GECO's reading data.
+  This is stated in the report and not investigated further.
 - What is still undecided is listed under "Open questions" at the end of this document.
+
+## Results after dropping adverbs (2026-11-17, English, still with R123)
+
+The numbers in the two results sections above were computed with adverbs as content words. Now:
+
+- 19,191 content-word tokens; 91.0% are SWOW cues and 5.9% are responses only.
+- Analysis table: 430,887 rows, 18,587 tokens, 3,511 distinct SWOW nodes. Monolinguals: 255,097 rows.
+- 18,214 of the 18,587 tokens (98%) were fixated by at least 3 monolingual readers.
+- 436 interest areas hold several words. None of them was in the table before either, because
+  their forms do not match a SWOW word, so the exclusion changes nothing in practice.
+
+## Results with R1 (2026-11-17, English, current)
+
+- SWOW-EN R1: 12,217 cues (the same cues as R123), 64,631 distinct responses, 483,636 cue -> response
+  edges, of which 387,314 link two cues. R123 had 1.39M edges, 1.07M between cues.
+- Matching GECO to SWOW does not change for cues: 91.0% of content-word tokens are cues with either
+  setting. Fewer words are responses only: 4.5% of tokens (R123: 5.9%), since R1 has fewer responses.
+- Analysis table: 424,823 rows, 18,325 tokens, 3,370 distinct SWOW nodes (17,461 tokens are cues,
+  864 responses only). Monolinguals: 251,506 rows.
 
 ## Open questions
 
@@ -187,24 +218,5 @@ Communities (stage 2)
 
 Switch variable and model (stage 3 and 4)
 
-5. **Repetitions.** If the previous content word is the same word, it is always a "stay" and also a
-   repetition, which speeds up reading by itself. Exclude these pairs, or add a repetition flag?
-6. **Spillover controls.** Add the previous word's frequency, length and surprisal? If so, the
-   contractions need fixing first: SUBTLEX-UK does not list "don't", "I'm" etc., so they currently
-   get the lowest Zipf value.
-7. **Adverbs.** Keep them as content words? Words like "still" and "even" are tagged as adverbs and
-   are not very topical. Adverbs also have the lowest SWOW coverage (81% of tokens).
-8. **Minimum number of readers per token.** Token means rest on 1 to 14 readers. Weighting by the
-   number of readers is agreed; should tokens fixated by very few readers (fewer than 5?) be
-   dropped as well?
-9. **Interest areas with several words.** 73 tokens hold two or more words ('pouf!" ...he') and have
-   summed surprisal values up to 55 bits. Exclude them from the model?
-10. **Direct association strength.** Which direction counts: previous word to current word, the
-    reverse, or the larger of the two? And R1 strengths?
-
-Data
-
-11. **Missing monolingual rows.** About 2% of the expected monolingual rows are absent from GECO's
-    reading data. Not yet checked which trials or readers they are.
-12. **Proper nouns.** They are excluded as content words at the moment (SWOW covers 33% of their
-    tokens). Confirm that they stay out and are skipped when looking for the previous content word.
+5. **Direction of the direct association strength.** Previous word to current word, the reverse, or
+   the larger of the two? (R1 strengths are decided.)
